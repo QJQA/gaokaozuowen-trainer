@@ -133,9 +133,14 @@ function r0(){
 function selT(i){S.topic=TOPICS[i];S.ui={thesis:'',args:['','',''],structs:[]};S.diag=null;S.ol=null;S.uo='';S.uc='';S.fb=null;S.step=1;render();}
 function genT(){
   var b=document.getElementById('genB'),e=document.getElementById('genE');b.disabled=true;b.textContent='\u751f\u6210\u4e2d\u2026';e.classList.add('h');
-  ai('\u8bf7\u751f\u6210\u4e00\u9053\u5317\u4eac\u9ad8\u8003\u98ce\u683c\u7684\u8bae\u8bba\u6587\u4f5c\u6587\u9898\u30021.\u9898\u76ee2-5\u5b57 2.\u5f15\u5bfc\u8bed100\u5b57\u5185 3.\u98ce\u683c\u53c2\u8003\u5386\u4e45\u5f25\u65b0\u3001\u7eed\u822a\u3001\u8bba\u751f\u9022\u5176\u65f6\u3001\u5b66\u4e60\u4eca\u8bf4 4.\u4e0d\u91cd\u590d 5.\u8fd4\u56deJSON\uff0c\u5b57\u6bb5title,prompt\u3002\u4ec5\u8fd4\u56deJSON\u4e0d\u8981\u4ee3\u7801\u5757\u3002').then(function(raw){
+  var used=[];try{used=JSON.parse(localStorage.getItem('gk_used_titles')||'[]');}catch(ex){}
+  var usedHint=used.length?'\u5df2\u51fa\u8fc7\u7684\u9898\u76ee\uff08\u5fc5\u987b\u5b8c\u5168\u907f\u5f00\uff09\uff1a'+used.join('\u3001')+'\u3002':'';
+  ai('\u8bf7\u751f\u6210\u4e00\u9053\u5317\u4eac\u9ad8\u8003\u98ce\u683c\u7684\u8bae\u8bba\u6587\u4f5c\u6587\u9898\u30021.\u9898\u76ee2-5\u5b57 2.\u5f15\u5bfc\u8bed100\u5b57\u5185 3.\u98ce\u683c\u53c2\u8003\u5386\u4e45\u5f25\u65b0\u3001\u7eed\u822a\u3001\u8bba\u751f\u9022\u5176\u65f6\u3001\u5b66\u4e60\u4eca\u8bf4 4.\u8fd4\u56deJSON\uff0c\u5b57\u6bb5title,prompt\u3002\u4ec5\u8fd4\u56deJSON\u4e0d\u8981\u4ee3\u7801\u5757\u3002'+usedHint).then(function(raw){
     var p=pj(raw);b.disabled=false;b.textContent='\u751f\u6210\u6a21\u62df\u9898';
-    if(p&&p.title){S.topic={year:'\u6a21\u62df',title:p.title,prompt:p.prompt,samples:[]};S.ui={thesis:'',args:['','',''],structs:[]};S.diag=null;S.ol=null;S.uo='';S.uc='';S.fb=null;S.step=1;render();}
+    if(p&&p.title){
+      used.push(p.title);if(used.length>20)used=used.slice(-20);
+      try{localStorage.setItem('gk_used_titles',JSON.stringify(used));}catch(ex){}
+      S.topic={year:'\u6a21\u62df',title:p.title,prompt:p.prompt,samples:[]};S.ui={thesis:'',args:['','',''],structs:[]};S.diag=null;S.ol=null;S.uo='';S.uc='';S.fb=null;S.step=1;render();}
     else{e.textContent='\u751f\u6210\u5931\u8d25\uff0c\u8bf7\u68c0\u67e5API Key';e.classList.remove('h');}
   });
 }
